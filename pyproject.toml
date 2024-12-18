@@ -12,11 +12,7 @@ description = "A mapping agent for data column categorization and mapping"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-    "openai",
-    "pandas",
-    "streamlit",
-    "python-dotenv",
-    "sfn-blueprint"
+    "sfn_blueprint==0.4.2"
 ]
 
 [project.urls]
