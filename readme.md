@@ -15,7 +15,7 @@ An AI-powered column mapping tool that intelligently maps your dataset columns t
 
 ### Prerequisites
 
-- Python 3.7+
+- Python 3.8+
 - OpenAI API key
 
 ### Installation
@@ -24,13 +24,14 @@ An AI-powered column mapping tool that intelligently maps your dataset columns t
 
 ```bash
 git clone [repository-url]
-cd [repository-name]```
+cd [repository-name]
+```
 
 
 2. Create and activate a virtual environment:
 
 ```bash
-python -m venv myenv
+python -m venv myenv # or use python3 if you have multiple Python versions 
 source myenv/bin/activate # Linux/Mac
 .\myenv\Scripts\activate # Windows
 ```
@@ -50,7 +51,8 @@ export OPENAI_API_KEY='your_openai_api_key'
 ### Running the Application
 
 ```bash
-streamlit run app.py```
+streamlit run app.py
+```
 
 ## 🔄 Workflow
 
