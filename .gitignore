@@ -45,4 +45,9 @@ Thumbs.db
 *.pyc
 __pycache__/
 *.pyc
-.__pycache__/
+# Python cache files
+__pycache__/
+*.pyc
+*/__pycache__/
+agents/__pycache__/
+config/__pycache__/
