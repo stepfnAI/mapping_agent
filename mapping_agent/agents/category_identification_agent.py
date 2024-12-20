@@ -5,7 +5,7 @@ from sfn_blueprint import Task
 from sfn_blueprint import SFNOpenAIClient
 import os
 from sfn_blueprint import SFNPromptManager
-from config.model_config import MODEL_CONFIG
+from mapping_agent.config.model_config import MODEL_CONFIG
 
 class SFNCategoryIdentificationAgent(SFNAgent):
     def __init__(self):

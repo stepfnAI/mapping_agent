@@ -19,4 +19,4 @@ dependencies = [
 Homepage = "https://github.com/stepfnAI/mapping_agent"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["mapping_agent"]

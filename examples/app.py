@@ -2,10 +2,10 @@ import sys
 import os
 from sfn_blueprint import SFNAgent, Task, SFNSessionManager
 from sfn_blueprint import setup_logger, SFNDataPostProcessor
-from agents.category_identification_agent import SFNCategoryIdentificationAgent
-from agents.column_mapping_agent import SFNColumnMappingAgent
-from views.streamlit_views import StreamlitView
-from utils.custom_data_loader import CustomDataLoader
+from mapping_agent.agents.category_identification_agent import SFNCategoryIdentificationAgent
+from mapping_agent.agents.column_mapping_agent import SFNColumnMappingAgent
+from mapping_agent.views.streamlit_views import StreamlitView
+from mapping_agent.utils.custom_data_loader import CustomDataLoader
 
 def run_app():
     # Initialize view and session
