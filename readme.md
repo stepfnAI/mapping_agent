@@ -23,8 +23,8 @@ An AI-powered column mapping tool that intelligently maps your dataset columns t
 1. Clone the repository:
 
 ```bash
-git clone [repository-url]
-cd [repository-name]
+git clone https://github.com/stepfnAI/mapping_agent.git
+cd mapping_agent
 ```
 
 2. Create and activate a virtual environment using virtualenv:
