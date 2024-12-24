@@ -6,8 +6,8 @@
                 "user_prompt_template": "This dataset comes from a SaaS business and may fall into one of these categories: billing (e.g., invoices, transactions, financial records), support (e.g., customer service tickets, response times, etc), usage (e.g., feature usage, user activity metrics), or other. Choose billing, support, or usage when one category is clearly dominant.Try to suggest a category among billing, support, or usage that is most relevant to the dataset. Based on the following column names, choose the best category: {columns}. Respond with only the category name."
             },
             "validation": {
-                "system_prompt": "You are a validation expert for category identification. Your task is to verify if the suggested category accurately reflects the dataset based on its column names.",
-                "user_prompt_template": "Validate if the following category suggestion is appropriate for the dataset:\nSuggested Category: {actual_output}\n\nDataset Columns: {columns}\n\nValidation Criteria:\n1. The category aligns with the majority of column names\n2. The category is specific and not overly broad\n3. No irrelevant categories are chosen\n\nRespond with TRUE on the first line if valid.\nRespond with FALSE on the first line if invalid and provide a brief explanation."
+                "system_prompt": "You are a simple validator that checks if a category is valid.",
+                "user_prompt_template": "Check if {actual_output} is one of these expected categories: billing, usage, or support.\n\nRespond with TRUE on the first line if it matches the expected category.\nRespond with FALSE on the first line only if it the catagory does not belong to billing, usage, or support and add 'Category must be billing, usage, or support' on the next line."
             }
         },
         "anthropic": {
@@ -16,8 +16,8 @@
                 "user_prompt_template": "Based on the following column names, categorize the dataset into one of these categories: billing, usage, support, combined, or other.Column names: {columns} Please respond with just the category name, nothing else."
             },
             "validation": {
-                "system_prompt": "You are a validation expert for category identification.",
-                "user_prompt_template": "Validate if the following category suggestion is appropriate for the dataset:\nSuggested Category: {actual_output}\n\nDataset Columns: {columns}\n\nValidation Criteria:\n1. The category aligns with the majority of column names\n2. The category is specific and not overly broad\n3. No irrelevant categories are chosen\n\nRespond with TRUE on the first line if valid.\nRespond with FALSE on the first line if invalid and provide a brief explanation."
+                "system_prompt": "You are a simple validator that checks if a category is valid.",
+                "user_prompt_template": "Check if {actual_output} is one of these expected categories: billing, usage, or support.\n\nRespond with TRUE on the first line if it matches the expected category.\nRespond with FALSE on the first line only if it the catagory does not belong to billing, usage, or support and add 'Category must be billing, usage, or support' on the next line."
             }
         }
     },
@@ -28,8 +28,8 @@
                 "user_prompt_template": "Given a {category} dataset, map the following input columns to the standard columns.\nInput columns: {input_columns}\n\nStandard columns:\nMandatory: {mandatory_columns}\nOptional: {optional_columns}\n\nProvide the mapping in JSON format where keys are standard columns and values are matched input columns. Map only when confident, otherwise use null as the value. Prioritize mapping mandatory columns. Response should be valid JSON."
             },
             "validation": {
-                "system_prompt": "You are a validation expert for column mapping suggestions. Your task is to verify if the provided column mappings are reasonable and properly structured. It's perfectly acceptable for some standard columns to be mapped to null - focus only on identifying obviously incorrect mappings.",
-                "user_prompt_template": "Validate if the following column mappings are reasonable:\nMappings: {actual_output}\n\nValidation Criteria:\n1. Response is in valid JSON format\n2. Mappings follow a logical pattern (e.g., date columns mapped to date-related fields)\n3. No obviously incorrect mappings (e.g., price mapped to date)\nNote: It's completely fine if some standard columns are mapped to null - only flag mappings that look clearly wrong.\n\nRespond with TRUE on the first line if the mappings are reasonable.\nRespond with FALSE on the first line if there are serious issues and provide a brief explanation."
+                "system_prompt": "You are a basic validator that only checks for major mapping issues.",
+                "user_prompt_template": "Check if the mapping makes general sense (ignore JSON formatting like None vs null): {actual_output}\n\nRespond with TRUE on the first line unless the mappings are completely wrong.\nRespond with FALSE only if the entire mapping structure is invalid or mappings are completely nonsensical, and briefly explain why."
             }
         },
         "anthropic": {
@@ -38,8 +38,8 @@
                 "user_prompt_template": "Validate if the following column mappings are reasonable:\nMappings: {actual_output}Validation Criteria:\n1. Response is in valid JSON format\n2. Mappings follow a logical pattern (e.g., date columns mapped to date-related fields)\n3. No obviously incorrect mappings (e.g., price mapped to date)\n\nRespond with TRUE on the first line if the mappings are reasonable.\nRespond with FALSE (only if there are serious issues in whole suggestion) on the first line if there are serious issues and provide a brief explanation."
             },
             "validation": {
-                "system_prompt": "You are a validation expert for column mapping suggestions. Your task is to verify if the provided column mappings are reasonable and properly structured. It's perfectly acceptable for some standard columns to be mapped to null/None - focus only on identifying obviously incorrect mappings.",
-                "user_prompt_template": "Validate if the following column mappings are reasonable:\nMappings: {actual_output}\n\nValidation Criteria:\n1. Response is in valid JSON format\n2. Mappings follow a logical pattern (e.g., date columns mapped to date-related fields)\n3. No obviously incorrect mappings (e.g., price mapped to date)\nNote: It's completely fine if some standard columns are mapped to null - only flag mappings that look clearly wrong.\n\nRespond with TRUE on the first line if the mappings are reasonable.\nRespond with FALSE (only if there are serious issues in whole suggestion) on the first line if there are serious issues and provide a brief explanation."
+                "system_prompt": "You are a basic validator that only checks for major mapping issues.",
+                "user_prompt_template": "Check if the mapping makes general sense (ignore JSON formatting like None vs null): {actual_output}\n\nRespond with TRUE on the first line unless the mappings are completely wrong.\nRespond with FALSE only if the entire mapping structure is invalid or mappings are completely nonsensical, and briefly explain why."
             }
         }
     }
