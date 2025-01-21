@@ -15,7 +15,7 @@ An AI-powered column mapping tool that intelligently maps your dataset columns t
 
 ### Prerequisites
 
-- Python 3.7+
+- Python Python 3.9-3.11
 - OpenAI API key
 
 ### Installation
@@ -23,22 +23,24 @@ An AI-powered column mapping tool that intelligently maps your dataset columns t
 1. Clone the repository:
 
 ```bash
-git clone [repository-url]
-cd [repository-name]```
-
-
-2. Create and activate a virtual environment:
-
-```bash
-python -m venv myenv
-source myenv/bin/activate # Linux/Mac
-.\myenv\Scripts\activate # Windows
+git clone https://github.com/stepfnAI/mapping_agent.git
+cd mapping_agent
 ```
 
-3. Install dependencies:
+2. Create and activate a virtual environment using virtualenv:
 
 ```bash
-pip install -r requirements.txt
+pip install virtualenv                # Install virtualenv if not already installed
+virtualenv venv                       # Create virtual environment
+source venv/bin/activate             # Linux/Mac
+# OR
+.\venv\Scripts\activate              # Windows
+```
+
+3. Install the package in editable mode:
+
+```bash
+pip install -e .
 ```
 
 4. Set up your OpenAI API key:
@@ -49,8 +51,15 @@ export OPENAI_API_KEY='your_openai_api_key'
 
 ### Running the Application
 
+Linux/Mac:
 ```bash
-streamlit run app.py```
+streamlit run ./examples/app.py
+```
+
+Windows:
+```bash
+streamlit run .\examples\app.py
+```
 
 ## 🔄 Workflow
 

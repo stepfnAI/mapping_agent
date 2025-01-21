@@ -3,11 +3,11 @@ import os
 import streamlit as st
 from sfn_blueprint import SFNAgent, Task, SFNSessionManager
 from sfn_blueprint import SFNDataLoader, setup_logger, SFNDataPostProcessor
-from agents.category_identification_agent import SFNCategoryIdentificationAgent
-from agents.column_mapping_agent import SFNColumnMappingAgent
-from views.streamlit_views import StreamlitView
+from mapping_agent.agents.category_identification_agent import SFNCategoryIdentificationAgent
+from mapping_agent.agents.column_mapping_agent import SFNColumnMappingAgent
+from mapping_agent.views.streamlit_views import StreamlitView
 from sfn_blueprint import SFNValidateAndRetryAgent
-from config.model_config import DEFAULT_LLM_PROVIDER
+from mapping_agent.config.model_config import DEFAULT_LLM_PROVIDER
 
 
 def run_app():

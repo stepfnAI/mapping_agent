@@ -6,7 +6,7 @@ from sfn_blueprint import SFNAIHandler
 import os
 import json
 from sfn_blueprint import SFNPromptManager
-from config.model_config import MODEL_CONFIG, DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
+from mapping_agent.config.model_config import MODEL_CONFIG, DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 
 class SFNColumnMappingAgent(SFNAgent):
     def __init__(self, llm_provider='openai'):
