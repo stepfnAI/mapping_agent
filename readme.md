@@ -51,6 +51,12 @@ export OPENAI_API_KEY='your_openai_api_key'
 
 ### Running the Application
 
+Linux/Mac:
+```bash
+streamlit run ./examples/app.py
+```
+
+Windows:
 ```bash
 streamlit run .\examples\app.py
 ```

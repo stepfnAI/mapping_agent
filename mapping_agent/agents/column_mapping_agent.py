@@ -2,16 +2,17 @@ from typing import Dict, List
 import pandas as pd
 from sfn_blueprint import SFNAgent
 from sfn_blueprint import Task
-from sfn_blueprint import SFNOpenAIClient
+from sfn_blueprint import SFNAIHandler
 import os
 import json
 from sfn_blueprint import SFNPromptManager
-from sfn_blueprint import MODEL_CONFIG
+from mapping_agent.config.model_config import MODEL_CONFIG, DEFAULT_LLM_MODEL, DEFAULT_LLM_PROVIDER
 
 class SFNColumnMappingAgent(SFNAgent):
-    def __init__(self):
+    def __init__(self, llm_provider='openai'):
         super().__init__(name="Column Mapping", role="Data Mapper")
-        self.client = SFNOpenAIClient()
+        self.ai_handler = SFNAIHandler()
+        self.llm_provider = llm_provider
         self.model_config = MODEL_CONFIG["column_mapper"]
         parent_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
         prompt_config_path = os.path.join(parent_path, 'config', 'prompt_config.json')
@@ -66,27 +67,52 @@ class SFNColumnMappingAgent(SFNAgent):
         # Get prompts using PromptManager
         system_prompt, user_prompt = self.prompt_manager.get_prompt(
             agent_type='column_mapper',
-            llm_provider='openai',
+            llm_provider=self.llm_provider,
+            prompt_type='main',
             input_columns=input_columns,
             mandatory_columns=self.standard_columns[category]['mandatory'],
             optional_columns=self.standard_columns[category]['optional'],
             category=category
         )
 
-        response = self.client.chat.completions.create(
-            model=self.model_config["model"],
-            messages=[
+        # Get provider config or use default if not found
+        provider_config = self.model_config.get(self.llm_provider, {
+            "model": DEFAULT_LLM_MODEL,
+            "temperature": 0.5,
+            "max_tokens": 500,
+            "n": 1,
+            "stop": None
+        })
+        
+        # Prepare the configuration for the API call
+        configuration = {
+            "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=self.model_config["temperature"],
-            max_tokens=self.model_config["max_tokens"],
-            n=self.model_config["n"],
-            stop=self.model_config["stop"]
+            "temperature": provider_config["temperature"],
+            "max_tokens": provider_config["max_tokens"],
+            "n": provider_config["n"],
+            "stop": provider_config["stop"]
+        }
+
+        # Use the AI handler to route the request
+        response, token_cost_summary = self.ai_handler.route_to(
+            llm_provider=self.llm_provider,
+            configuration=configuration,
+            model=provider_config['model']
         )
+
+        # Handle response based on provider
+        if isinstance(response, dict):  # For Cortex
+            mapping_str = response['choices'][0]['message']['content']
+        elif hasattr(response, 'choices'):  # For OpenAI
+            mapping_str = response.choices[0].message.content
+        else:  # For other providers or direct string response
+            mapping_str = response
+        
         # Parse and validate the mapping from the response
-        mapping_str = response.choices[0].message.content.strip()
-        return self._parse_mapping_response(mapping_str)
+        return self._parse_mapping_response(mapping_str.strip())
 
     def _parse_mapping_response(self, mapping_str: str) -> Dict[str, str]:
         """
@@ -134,7 +160,6 @@ class SFNColumnMappingAgent(SFNAgent):
                     continue
                     
                 cleaned_mapping[mapped_col] = input_col
-
             return cleaned_mapping
                 
         except json.JSONDecodeError as e:
@@ -181,3 +206,34 @@ class SFNColumnMappingAgent(SFNAgent):
             'unmapped_mandatory_columns': len(mandatory_columns - mapped_standards),
             'unmapped_optional_columns': len(optional_columns - mapped_standards)
         }
+
+    def get_validation_params(self, response, task):
+        """
+        Get parameters for validation
+        :param response: The response from execute_task to validate (column mappings)
+        :param task: The validation task containing the DataFrame and category
+        :return: Dictionary with validation parameters
+        """
+        if not isinstance(task.data, dict) or 'dataframe' not in task.data or 'category' not in task.data:
+            raise ValueError("Task data must be a dictionary containing 'dataframe' and 'category' keys")
+
+        df = task.data['dataframe']
+        category = task.data['category']
+
+        if not isinstance(df, pd.DataFrame):
+            raise ValueError("DataFrame must be a pandas DataFrame")
+
+        if category not in self.standard_columns:
+            raise ValueError(f"Invalid category: {category}")
+
+        # Get validation prompts from prompt manager
+        prompts = self.prompt_manager.get_prompt(
+            agent_type='column_mapper',
+            llm_provider='openai',
+            prompt_type='validation',
+            actual_output=response,
+            input_columns=df.columns.tolist(),
+            mandatory_columns=self.standard_columns[category]['mandatory'],
+            optional_columns=self.standard_columns[category]['optional']
+        )
+        return prompts
