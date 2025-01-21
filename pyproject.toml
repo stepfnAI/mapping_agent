@@ -9,7 +9,7 @@ authors = [
   { name="StepFN AI" },
 ]
 description = "A mapping agent for data column categorization and mapping"
-readme = "README.md"
+readme = "readme.md"
 requires-python = ">=3.8"
 
 dependencies = [
