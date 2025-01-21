@@ -15,7 +15,7 @@ An AI-powered column mapping tool that intelligently maps your dataset columns t
 
 ### Prerequisites
 
-- Python 3.8+
+- Python Python 3.9-3.11
 - OpenAI API key
 
 ### Installation

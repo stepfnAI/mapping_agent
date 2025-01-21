@@ -10,7 +10,7 @@ authors = [
 ]
 description = "A mapping agent for data column categorization and mapping"
 readme = "readme.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9, <3.12"
 
 dependencies = [
     "sfn_blueprint==0.4.2"
